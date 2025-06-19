@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BookVault – Your Library</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #1e1e2f;
+            margin: 0;
+            padding: 2rem;
+            color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 720px;
+            margin: auto;
+            background: #292b3e;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2rem;
+            color: #ffcc80;
+            margin-bottom: 1.5rem;
+            font-family: 'Georgia', serif;
+        }
+
+        .nav {
+            text-align: right;
+            margin-bottom: 1.2rem;
+        }
+
+        .nav a, .nav button {
+            font-size: 0.95rem;
+            color: #90caf9;
+            background: none;
+            border: none;
+            margin-left: 1rem;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .nav a:hover,
+        .nav button:hover {
+            text-decoration: underline;
+        }
+
+        .add-btn {
+            display: block;
+            width: fit-content;
+            margin: 0 auto 1.5rem;
+            background: #8d6e63;
+            color: #fff;
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+
+        .add-btn:hover {
+            background: #6d4c41;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            background: #383b4d;
+            margin-bottom: 1rem;
+            padding: 1rem 1.2rem;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.2s;
+        }
+
+        li:hover {
+            background: #44475a;
+        }
+
+        li span {
+            flex: 1;
+            font-size: 1rem;
+        }
+
+        .actions a {
+            text-decoration: none;
+            margin-left: 8px;
+            padding: 6px 12px;
+            font-size: 0.85rem;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .actions a:first-child {
+            background: #43a047;
+            color: #fff;
+        }
+
+        .actions a:first-child:hover {
+            background: #388e3c;
+        }
+
+        .actions a:last-child {
+            background: #e53935;
+            color: #fff;
+        }
+
+        .actions a:last-child:hover {
+            background: #c62828;
+        }
+
+        .availability {
+            font-weight: 600;
+        }
+
+        .available {
+            color: #80ffb3;
+        }
+
+        .not-available {
+            color: #ff8a80;
+        }
+
+        .no-books {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 1.1rem;
+            color: #bbb;
+        }
+
+        form {
+            display: inline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav">
+            <a href="{% url 'profile' %}">Profile</a>
+            <form method="post" action="{% url 'logout' %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit">Logout</button>
+            </form>
+        </div>
+
+        <h1>📚 My Book Shelf</h1>
+
+        <a class="add-btn" href="{% url 'create_book' %}">+ Add New Book</a>
+
+        {% if books %}
+            <ul>
+                {% for book in books %}
+                    <li>
+                        <span>
+                            <strong>{{ book.title }}</strong> by {{ book.author }} ({{ book.published_year }})
+                            —
+                            <span class="availability {% if book.is_available %}available{% else %}not-available{% endif %}">
+                                {% if book.is_available %}Available{% else %}Not Available{% endif %}
+                            </span>
+                        </span>
+                        <span class="actions">
+                            <a href="{% url 'update_book' book.id %}">Edit</a>
+                            <a href="{% url 'delete_book' book.id %}">Delete</a>
+                        </span>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <div class="no-books">No books found in your shelf.</div>
+        {% endif %}
+    </div>
+</body>
+</html>

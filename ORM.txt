@@ -1,0 +1,25 @@
+ORM (Object-Relational Mapping) is a technique that lets you interact with your database using Python objects instead of writing SQL queries.
+
+In Django:
+Models are Python classes that represent database tables.
+ORM lets you create, read, update, and delete records using Python code.
+
+Example:
+To add a new book record: 
+`Books.objects.create(title="Book Title", author="Author", published_year=2024)`
+
+To retrieve all book records:
+books = Books.objects.all()
+
+To update an existing book record:
+
+book = Books.objects.get(id=1)
+book.title = "New Title"
+book.save()
+
+
+To delete a book record:
+
+book = Books.objects.get(id=1)
+book.delete()
+

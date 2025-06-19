@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - BookVault</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #2c2f33;
+            color: #e4e6eb;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 1rem;
+            background-image: url('https://i.imgur.com/yH1rZxM.png'); /* Subtle bookshelf image */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-blend-mode: multiply;
+            opacity: 0.95;
+        }
+
+        .login-container {
+            background: rgba(60, 64, 67, 0.95);
+            padding: 2.5rem 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .header-icon {
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 0.3rem;
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .tagline {
+            text-align: center;
+            font-size: 0.95rem;
+            color: #c7b299;
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            font-size: 0.95rem;
+            margin-bottom: 0.25rem;
+            color: #d1d1d1;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            padding: 0.7rem;
+            background: #f1f1f1;
+            color: #1e1e1e;
+            border: 1px solid #bbb;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        input:focus {
+            border-color: #a1887f;
+            outline: none;
+            box-shadow: 0 0 4px #a1887f;
+        }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #444;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+
+        button[type="submit"] {
+            background: #8d6e63;
+            color: #fff;
+            border: none;
+            padding: 0.8rem;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button[type="submit"]:hover {
+            background: #6d4c41;
+        }
+
+        .forgot-link,
+        .register-link {
+            text-align: center;
+            margin-top: 0.8rem;
+            font-size: 0.9rem;
+        }
+
+        .forgot-link a,
+        .register-link a {
+            color: #c8e6c9;
+            text-decoration: none;
+        }
+
+        .forgot-link a:hover,
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+        .errorlist {
+            color: #f44336;
+            list-style: none;
+            padding-left: 0;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .message {
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            text-align: center;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .message.warning {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+        }
+
+        .message.info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="header-icon">📚</div>
+        <h2>Welcome Back</h2>
+        <div class="tagline">Your personal book shelf awaits</div>
+
+        {% if messages %}
+        <div class="messages-container">
+            {% for message in messages %}
+                <div class="message {{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            <label for="{{ form.username.id_for_label }}">Username</label>
+            {{ form.username }}
+
+            <label for="{{ form.password.id_for_label }}">Password</label>
+            <div class="password-wrapper">
+                {{ form.password }}
+                <button type="button" class="toggle-password" onclick="togglePassword()">Show</button>
+            </div>
+
+            <button type="submit">Login</button>
+        </form>
+
+        <div class="forgot-link">
+            <a href="{% url 'password_reset' %}">Forgot Password?</a>
+        </div>
+
+        <div class="register-link">
+            Don't have an account? <a href="{% url 'register' %}">Register here</a>
+        </div>
+    </div>
+
+    <script>
+        function togglePassword() {
+            const pwdField = document.querySelector('input[type="password"], input[name="password"]');
+            const toggleBtn = document.querySelector('.toggle-password');
+            if (pwdField.type === "password") {
+                pwdField.type = "text";
+                toggleBtn.textContent = "Hide";
+            } else {
+                pwdField.type = "password";
+                toggleBtn.textContent = "Show";
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home | Book Management</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #fff;
+        }
+        .home-container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 100%;
+            max-width: 380px;
+        }
+        h2 {
+            font-size: 1.4rem;
+            margin-bottom: 1.2rem;
+            color: #eaeaea;
+        }
+        p {
+            margin: 1rem 0;
+        }
+        a {
+            color: #5cb85c;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1rem;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="home-container">
+        <h2>📚 Personal Book Management</h2>
+        <p><a href="{% url 'login' %}">Login</a> to manage your books</p>
+        <p>New user? <a href="{% url 'register' %}">Register here</a></p>
+    </div>
+</body>
+</html>
