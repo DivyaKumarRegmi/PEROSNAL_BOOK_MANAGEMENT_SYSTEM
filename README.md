@@ -30,3 +30,53 @@ Containerization: Docker, Docker Compose
 Configuration: python-decouple
 System Architecture
 The system is designed with a clear separation of concerns, enabling scalability and security.
+
+Getting Started
+Follow these instructions to get the project running on your local machine for development and testing purposes.
+
+Prerequisites
+Docker
+Docker Compose
+Installation
+Clone the repository:
+git clone https://github.com/your-username/personal-book-management-system.git
+cd personal-book-management-system
+
+Create the environment file: Create a .env file in the project root by copying the example.
+cp .env.example .env
+
+Build and run the containers: Use Docker Compose to build the images and start the services.
+docker-compose up --build
+
+Apply database migrations: In a separate terminal, once the containers are running, execute the database migrations.
+docker-compose exec backend python manage.py migrate
+
+Access the application:
+
+Django Application: http://localhost:8000
+Keycloak Admin Console: http://localhost:8080 (Use the admin credentials from your .env file).
+Keycloak Configuration
+For the OIDC integration to work, you need to perform a one-time setup in your Keycloak instance:
+
+Create a new realm (e.g., my-app-realm).
+Create a new client with the Client ID django-app.
+Set Access Type to confidential.
+Add http://localhost:8000/* to the Valid Redirect URIs.
+Add http://localhost:8000/ to the Valid Post Logout Redirect URIs.
+Under the django-app client, go to the Roles tab and create a new role named librarian.
+Create a user in Keycloak and assign them the librarian role from the django-app client.
+API Endpoints
+The following API endpoints are available:
+
+Endpoint	Method	Description	Permissions Required
+/api/books/	GET	List all books.	Authenticated, librarian
+/api/books/	POST	Create a new book.	Authenticated, librarian
+/api/books/<id>/	GET	Retrieve a specific book.	Authenticated, librarian
+/api/books/<id>/	PUT	Update a specific book.	Authenticated, librarian
+/api/books/<id>/	DELETE	Delete a specific book.	Authenticated, librarian
+/api/profile/	GET	Retrieve the current user's profile.	Authenticated
+/api/profile/	PUT	Update the current user's profile.	Authenticated
+/api/token/	POST	Obtain JWT access and refresh tokens.	Public
+/api/token/refresh/	POST	Refresh an access token.	Public
+/api/logout/	POST	Blacklist a refresh token to log out.	Authenticated
+
