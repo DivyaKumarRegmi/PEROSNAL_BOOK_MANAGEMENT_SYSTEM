@@ -1,57 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>Home | Book Management</title>
     <style>
-        * {
-            box-sizing: border-box;
-        }
         body {
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            font-family: 'Georgia', serif;
+            color: #f5f5f5;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            color: #fff;
+
+           
+            background-size: cover;
+            background-attachment: fixed;
         }
+
         .home-container {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            padding: 2.5rem;
-            border-radius: 12px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            background-color: rgba(34, 34, 34, 0.95);
+            padding: 50px 60px;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
             text-align: center;
+            max-width: 520px;
             width: 100%;
-            max-width: 380px;
+            border: 2px solid #3e3e3e;
         }
+
         h2 {
-            font-size: 1.4rem;
-            margin-bottom: 1.2rem;
-            color: #eaeaea;
+            font-size: 30px;
+            margin-bottom: 35px;
+            color: #ffe082;
+            text-shadow: 1px 1px 2px #000;
         }
+
         p {
-            margin: 1rem 0;
+            margin: 18px 0;
+            font-size: 17px;
         }
+
         a {
-            color: #5cb85c;
+            color: #81d4fa;
             text-decoration: none;
-            font-weight: 500;
-            font-size: 1rem;
+            font-weight: 600;
+            border-bottom: 1px dashed transparent;
+            transition: all 0.3s ease;
         }
+
         a:hover {
-            text-decoration: underline;
+            color: #4fc3f7;
+            border-bottom: 1px dashed #4fc3f7;
         }
     </style>
 </head>
 <body>
     <div class="home-container">
         <h2>📚 Personal Book Management</h2>
+
+        <!-- Default Django login -->
         <p><a href="{% url 'login' %}">Login</a> to manage your books</p>
+        
+        <!-- Keycloak login -->
+        <p><a href="{% url 'oidc_authentication_init' %}">Login with Keycloak</a></p>
+        
         <p>New user? <a href="{% url 'register' %}">Register here</a></p>
+        
+        
     </div>
 </body>
 </html>

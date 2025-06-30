@@ -1,0 +1,102 @@
+services:
+
+  db:
+    image: mysql:8.0
+    container_name: newdjango_mysql_db
+    volumes:
+      - mysql_data:/var/lib/mysql # Volume for MySQL data
+      
+    environment:
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "${DB_USER}", "-p${DB_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+    ports:
+      - "3307:3306" # MySQL default port
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    container_name: newdjango_keycloak
+    command: start-dev
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+      - KC_HOSTNAME=${KEYCLOAK_PUBLIC_DOMAIN}
+      - KC_PROXY=edge
+      - KC_HTTP_ENABLED=true
+      - KC_HOSTNAME_STRICT_BACKCHANNEL=false
+
+    volumes:
+    - keycloak_data:/opt/keycloak/data
+    ports:
+      - "8080:8080"
+
+
+  backend:
+    build: . # Path to your Dockerfile
+    container_name: newdjango_backend
+    command: python manage.py runserver 0.0.0.0:8000
+    # For production, use a WSGI server like Gunicorn:
+    # command: gunicorn myproject.wsgi:application --bind 0.0.0.0:8000
+    volumes:
+      - .:/app # Mount current directory to /app in container for live reload
+      
+    ports:
+      - "8000:8000"
+    environment:
+      - SECRET_KEY=${SECRET_KEY}
+      - DEBUG=TRUE # Should be FALSE in production
+      - DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1
+      - DJANGO_SETTINGS_MODULE=myproject.settings # Corrected to match your project structure
+      - DB_NAME=${DB_NAME} # Pass MySQL DB settings
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_HOST=db # Use service name as hostname
+      - DB_PORT=3306 # MySQL default port
+      # Keycloak OIDC Settings
+      - OIDC_RP_CLIENT_ID=${OIDC_RP_CLIENT_ID}
+      - OIDC_RP_CLIENT_SECRET=${OIDC_RP_CLIENT_SECRET}
+      - OIDC_OP_DISCOVERY_ENDPOINT=${OIDC_OP_DISCOVERY_ENDPOINT}
+    depends_on:
+      db:
+        condition: service_healthy
+      keycloak:
+        condition: service_started
+  openldap:
+    image: osixia/openldap:1.5.0
+    container_name: openldap
+    environment:
+      - LDAP_ORGANISATION=MyOrg
+      - LDAP_DOMAIN=myorg.local
+      - LDAP_ADMIN_PASSWORD=admin
+    ports:
+      - "389:389"
+    volumes:
+      - ldap_data:/var/lib/ldap
+      - ldap_config:/etc/ldap/slapd.d
+
+  phpldapadmin:
+    image: osixia/phpldapadmin:0.9.0
+    container_name: phpldapadmin
+    environment:
+      - PHPLDAPADMIN_LDAP_HOSTS=openldap
+    ports:
+      - "6443:443"
+    depends_on:
+      - openldap    
+
+volumes:
+  mysql_data: # Define the mysql_data volume
+  keycloak_data: # Define the keycloak_data volume
+  ldap_data: # Define the ldap_data volume
+  ldap_config: # Define the ldap_config volume
+ 
+networks:
+  default:
+    name: newdjango_network

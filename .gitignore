@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*~
+*.egg-info/
+*.egg
+dist/
+build/
+*.so
+*.log
+*.pot
+*.mo
+
+# Virtualenv / Conda
+.env
+.venv
+env/
+venv/
+ENV/
+VENV/
+.conda/ # Your project seems to use conda
+
+# Django
+*.sqlite3
+db.sqlite3 # Even if you use MySQL, good to have
+local_settings.py
+# media/ # Uncomment if you don't want to track user-uploaded media files
+# staticfiles/ # Uncomment if you run collectstatic and don't want to commit the result
+
+# IDE / Editor
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+Thumbs.db
